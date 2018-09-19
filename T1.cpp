@@ -1,14 +1,22 @@
 #include <cstdio>
 #include <cstdlib>
 
+typedef struct _Peca{
+	int linha;
+	int coluna;
+	int tipo;
+
+}Peca;
+
+Peca* resultado;
 int **tab;
-int nPeças;
+int nPecas = 0;
 
 bool Jan_Ken_Puzzle(int R, int C){
 
 	int peca;
 
-	if(nPeças == 1){
+	if(nPecas == 1){
 		return true;
 	}
 
@@ -21,13 +29,18 @@ bool Jan_Ken_Puzzle(int R, int C){
 						// come a peça
 						tab[i-1][j] = tab[i][j];
 						tab[i][j] = 0;
-						nPeças--;
+						nPecas--;
+						
+						resultado.linha = i-1;
+						resultado.coluna = j;
+						resultado.tipo = tab[i-1][j];
+						
 						if(Jan_Ken_Puzzle(R, C) == true)// chama a função recursivamente
 							return true;
 						// restaura o tabuleiro como ele tava
 						tab[i][j] = tab[i-1][j];
 						tab[i-1][j] = peca;
-						nPeças++;
+						nPecas++;
 					}
 				}
 				if(j < (C -1)){ // Se eu puder ir para a direita
@@ -36,13 +49,18 @@ bool Jan_Ken_Puzzle(int R, int C){
 						// come a peça
 						tab[i][j+1] = tab[i][j];
 						tab[i][j] = 0;
-						nPeças--;
+						
+						nPecas--;
+						resultado.linha = i;
+						resultado.coluna = j+1;
+						resultado.tipo = tab[i][j+1];
+						
 						if(Jan_Ken_Puzzle(R, C) == true)// chama a função recursivamente
 							return true;
 						// restaura o tabuleiro como ele tava
 						tab[i][j] = tab[i][j+1];
 						tab[i][j+1] = peca;
-						nPeças++;
+						nPecas++;
 
 					}
 				}
@@ -52,13 +70,18 @@ bool Jan_Ken_Puzzle(int R, int C){
 						// come a peça
 						tab[i+1][j] = tab[i][j];
 						tab[i][j] = 0;
-						nPeças--;
+						
+						nPecas--;
+						resultado.linha = i+1;
+						resultado.coluna = j;
+						resultado.tipo = tab[i+1][j];
+						
 						if(Jan_Ken_Puzzle(R, C) == true)// chama a função recursivamente
 							return true;
 						// restaura o tabuleiro como ele tava
 						tab[i][j] = tab[i+1][j];
 						tab[i+1][j] = peca;
-						nPeças++;
+						nPecas++;
 
 					}
 				}
@@ -68,13 +91,18 @@ bool Jan_Ken_Puzzle(int R, int C){
 						// come a peça
 						tab[i][j-1] = tab[i][j];
 						tab[i][j] = 0;
-						nPeças--;
+						nPecas--;
+
+						resultado.linha = i;
+						resultado.coluna = j-1;
+						resultado.tipo = tab[i][j-1];
+						
 						if(Jan_Ken_Puzzle(R, C) == true) // chama a função recursivamente
 							return true;
 						// restaura o tabuleiro como ele tava
 						tab[i][j] = tab[i][j-1];
 						tab[i][j-1] = peca;
-						nPeças++;
+						nPecas++;
 
 					}
 				}
@@ -94,6 +122,8 @@ int main(){
 
 	scanf("%d %d", &R, &C);
 
+	
+
 	tab = (int**) malloc(sizeof(int*) *R);
 	for(int i = 0; i < C; i++)
 		tab[i] = (int*) malloc(sizeof(int)*C);
@@ -102,21 +132,24 @@ int main(){
 		for (int j = 0; j < C; ++j)
 		{
 			scanf("%d", &tab[i][j]);
+			if(tab[i][j] != 0)
+				nPecas++;
 		}
 	}
 
 	if(Jan_Ken_Puzzle(R,C) == true){
-		printf("deu bom\n");
+		printf("%d %d %d\n", resultado.linha+1, resultado.coluna+1, resultado.tipo);
+
 	}
 
-	for(int i = 0; i < R; i++){
-		for (int j = 0; j < C; ++j)
-		{
-			printf("%d ", &tab[i][j]);
+	// for(int i = 0; i < R; i++){
+	// 	for (int j = 0; j < C; ++j)
+	// 	{
+	// 		printf("%d ", tab[i][j]);
 
-		}
-		printf("\n");
-	}
+	// 	}
+	// 	printf("\n");
+	// }
 
 
 	return 0;
