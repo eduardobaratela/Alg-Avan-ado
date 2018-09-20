@@ -16,11 +16,13 @@ int **tab;
 int nPecas = 0;
 int nCaminhos = 0;
 
-// Para utilizar o comparador de pecas q eu quiser num Set, eu preciso criar uma classe e sobrecarregar o operador()
-// Eu tbm n entendi direito pq isso, então so aceitei pq funciona uhull
+
+// Estou sobrecarregando o operador () para usar a classe como um functor 
+
+
 class ComparePeca{
 public:	
-	bool operator()(Peca x, Peca y){
+	bool operator()( Peca const&x, Peca const& y){
 	 	if(x.linha < y.linha)
 	 		return true;
 	 	else if(x.linha == y.linha){
@@ -78,7 +80,6 @@ void Jan_Ken_Puzzle(int R, int C){
 						// come a peça
 						tab[i][j+1] = tab[i][j];
 						tab[i][j] = 0;
-						
 						nPecas--;
 						
 						result.linha = i;
@@ -99,7 +100,6 @@ void Jan_Ken_Puzzle(int R, int C){
 						// come a peça
 						tab[i+1][j] = tab[i][j];
 						tab[i][j] = 0;
-						
 						nPecas--;
 						
 						result.linha = i+1;
@@ -131,17 +131,12 @@ void Jan_Ken_Puzzle(int R, int C){
 						tab[i][j] = tab[i][j-1];
 						tab[i][j-1] = peca;
 						nPecas++;
-
 					}
 				}
 			}
 
 		}
 	}
-
-	return;
-
-
 }
 
 
@@ -154,27 +149,24 @@ int main(){
 
 	// Alocando o tabuleiro
 	tab = (int**) malloc(sizeof(int*) *R);
-	for(int i = 0; i < C; i++)
+	for(int i = 0; i < R; i++)
 		tab[i] = (int*) malloc(sizeof(int)*C);
 
 	for(int i = 0; i < R; i++){
-		for (int j = 0; j < C; ++j){
+		for (int j = 0; j < C; j++){
 			cin >> tab[i][j];
+
 			if(tab[i][j] != 0) // Contando o numero de pecas no tabuleiro
 				nPecas++;
-		}
+			}
 	}
-	//Iniciando o result
-	result.linha = 0;
-	result.coluna = 0;
-	result.tipo = tab[0][0];
 
 	Jan_Ken_Puzzle(R, C);
 	// numero de caminhos distintos encontrados
 	cout << nCaminhos << endl;
 	// numero de posicoes finais distintas encontradas e quais elas são
 	cout << resultados.size() << endl;
-	for (it=resultados.begin(); it!=resultados.end(); ++it){
+	for (it = resultados.begin(); it != resultados.end(); it++){
 		cout << (it->linha)+1 << " " << (it->coluna)+1 << " " <<it->tipo << endl;
 	}
 
